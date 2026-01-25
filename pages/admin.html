@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EventFlow — Admin</title>
+    <link rel="stylesheet" href="../CSS/admin.css">
+</head>
+<body>
+
+<header class="navbar">
+    <h1>EventFlow — Admin</h1>
+</header>
+
+<main class="container">
+
+    <section class="stats">
+        <h2>Events Created: <span>0</span></h2>
+    </section>
+
+    <section class="table-section">
+        <table class="event-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Event Name</th>
+                    <th>Club</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Coordinators</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Tech Talk</td>
+                    <td>Coding Club</td>
+                    <td>10/02/2026 10:00</td>
+                    <td>10/02/2026 12:00</td>
+                    <td>Alice, Bob</td>
+                    <td class="actions">
+                        <button class="btn btn-primary">Download CSV</button>
+                        <button class="btn btn-secondary">Participants</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="form-section">
+        <h2>Create New Event</h2>
+
+        <form class="event-form">
+            <input type="text" placeholder="Event Name" required>
+            <input type="text" placeholder="Club Name" required>
+            <input type="datetime-local" required>
+            <input type="datetime-local" required>
+            <input type="text" placeholder="Coordinators (name,email; ...)" required>
+            <button type="submit" class="btn btn-primary">Create Event</button>
+        </form>
+    </section>
+
+</main>
+
+<footer class="footer">
+    © 2026 EventFlow. All rights reserved.
+</footer>
+
+</body>
+</html>

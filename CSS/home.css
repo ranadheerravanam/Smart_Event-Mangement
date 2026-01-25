@@ -1,0 +1,48 @@
+body{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #222;
+}
+
+nav{
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+main{
+    padding: 4rem 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.image-row{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.image-row .user-section,
+.image-row .admin-section{
+    text-align: center;
+}
+
+.profile-img{
+    width: 180px;
+    max-width: 30vw;
+    height: auto;
+    display: block;
+    margin: 0 auto 0.5rem auto;
+    border-radius: 8px;
+}
+
+footer{
+    text-align: center;
+    padding: 1rem 0;
+    color: #666;
+}
