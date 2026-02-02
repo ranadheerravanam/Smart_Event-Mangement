@@ -1,48 +1,96 @@
+*{
+    box-sizing: border-box;
+}
+
 body{
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: #ffffff;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f6fb;
     color: #222;
 }
 
 nav{
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
+    background: linear-gradient(135deg, #1f2937, #111827);
+    color: white;
     text-align: center;
+    padding: 20px 0;
+}
+
+nav h1{
+    margin: 0;
+    font-size: 2rem;
+}
+
+.tagline{
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    margin-top: 5px;
 }
 
 main{
-    padding: 4rem 1rem;
-    max-width: 1000px;
-    margin: 0 auto;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
 }
 
 .image-row{
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 2rem;
+    gap: 50px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
-.image-row .user-section,
-.image-row .admin-section{
+.card{
+    background: white;
+    width: 280px;
+    padding: 30px 20px;
     text-align: center;
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.profile-img{
-    width: 180px;
-    max-width: 30vw;
-    height: auto;
-    display: block;
-    margin: 0 auto 0.5rem auto;
-    border-radius: 8px;
+.card:hover{
+    transform: translateY(-10px);
 }
 
-footer{
-    text-align: center;
-    padding: 1rem 0;
+.card img{
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.card h3{
+    margin: 10px 0 5px;
+}
+
+.card p{
+    font-size: 0.9rem;
     color: #666;
 }
+
+.card a{
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.btn{
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 20px;
+    background: #2563eb;
+    color: white;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+footer{
+    background: #111827;
+    color: #9ca3af;
+    text-align: center;
+    padding: 15px;
+}
+
