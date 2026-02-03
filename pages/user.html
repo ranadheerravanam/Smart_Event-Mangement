@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>VIT Chennai Event Scheduler</title>
-
-<link rel="stylesheet" type="text/css" href="../CSS/user.css">
-
+    <meta charset="UTF-8">
+    <title>VIT Chennai Event Scheduler</title>
+    <link rel="stylesheet" href="../CSS/user.css">
 </head>
+
 <body>
 
 <header>
@@ -19,7 +19,10 @@
 </p>
 
 <div class="top-buttons">
-    <button>Browse Events</button>
+    <button onclick="scrollToEvents()">Browse Events</button>
+
+    <a href="https://eventhubcc.vit.ac.in/EventHub/"> <button>Register Events</button>
+    </a>
 </div>
 
 <div class="stats-container">
@@ -29,68 +32,100 @@
     </div>
 
     <div class="stat-box">
-        <div class="stat-number">0</div>
+        <div class="stat-number">70+</div>
         Clubs
     </div>
 
     <div class="stat-box">
-        <div class="stat-number">0</div>
+        <div class="stat-number">10+</div>
         Venues
     </div>
 
     <div class="stat-box">
-        <div class="stat-number">0</div>
-        Open Now
+        <div class="stat-number">Open</div>
+        Now
     </div>
 </div>
 
-<!-- UPCOMING EVENTS SECTION -->
+<!-- UPCOMING EVENTS -->
+<div class="upcoming-section" id="events">
 
-<div class="upcoming-section">
-    <h1 style="font-size:32px; margin-top:0;">Upcoming Events</h1>
+    <h1 class="section-title">Upcoming Events</h1>
     <p>Discover and register for exciting events across campus</p>
 
     <input type="text" placeholder="Search events..." class="search-box">
 
     <div class="filter-row">
-        
+
         <!-- CLUBS -->
         <select>
             <option>All Clubs</option>
-            <option>SPORTS CLUB</option>
-            <option>CULTURE IT</option>
-            <option>DATA SCIENCE CLUB</option> 
-            <option>DESIGNERS CLUB</option>
-            <option>ROBOTICS CLUB</option>
+
+            <option>Designers Club</option>
+            <option>PLACEXP</option>
+            <option>RESOURCEXP</option>
+            <option>VIT Finance and Management Club</option>
+            <option>CodeChef VIT</option>
+            <option>Google Developer Student Club (GDSC)</option>
+            <option>Dream Merchants</option>
+            <option>Entrepreneurship Cell (E-Cell)</option>
+            <option>Internet of Things Community (IOTHINC)</option>
+            <option>Linux Club</option>
+            <option>Robotics Club</option>
+            <option>Game Development Club</option>
+            <option>Aerospace Club</option>
+            <option>Android Club</option>
+            <option>AUTOVIT</option>
+
+            <option>BIOSPHERE</option>
+            <option>Health Club</option>
+            <option>National Service Scheme (NSS)</option>
+            <option>Rotaract Club</option>
+            <option>Youth Red Cross (YRC)</option>
+
+            <option>Culture IT</option>
+            <option>Dance Club</option>
+            <option>Music Club</option>
+            <option>Sports Club</option>
+
+            <option>Arignar Anna Tamil Mandram</option>
+            <option>English Literary Association</option>
+            <option>Hindi Literary Association</option>
+
+            <option>Team ASTREx</option>
+            <option>Team Ignition</option>
+            <option>Team Shaurya Racing</option>
         </select>
 
-        <!-- UPDATED VENUES -->
+        <!-- VENUES -->
         <select>
             <option>All Venues</option>
             <option>MG Auditorium</option>
-            <option>Netaji Auditorium Ab1-7th Floor</option>
-            <option>Ab1 Portico</option>
             <option>Clock Court</option>
-            <option>Kasthurba Hall</option>
             <option>Kamarajar Auditorium</option>
-            <option>VOC Auditorium</option>
-            <option>Mini-Football Ground</option>
-            <option>AB1-Mini Conference Room (AB1-101)</option>
             <option>Basketball Court</option>
         </select>
 
-        <!-- DATES -->
-        <input type="date" placeholder="dd-mm-yyyy">
-        <input type="date" placeholder="dd-mm-yyyy">
+        <input type="date">
+        <input type="date">
 
-        <!-- SORT -->
         <select>
-            <option>Sort-By</option>
-            <option>Newest-first</option>
-            <option>Oldest-first</option>
+            <option>Sort By</option>
+            <option>Newest First</option>
+            <option>Oldest First</option>
         </select>
     </div>
 </div>
 
+<!-- SMALL JS -->
+<script>
+function scrollToEvents() {
+    document.getElementById("events").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+</script>
+
 </body>
 </html>
+

@@ -7,64 +7,91 @@
 </head>
 <body>
 
-<header class="navbar">
+<header>
     <h1>EventFlow — Admin</h1>
 </header>
 
-<main class="container">
+<div class="container">
 
-    <section class="stats">
-        <h2>Events Created: <span>0</span></h2>
-    </section>
+    <h3>Events Created: <span id="eventCount">0</span></h3>
 
-    <section class="table-section">
-        <table class="event-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Event Name</th>
-                    <th>Club</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Coordinators</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Tech Talk</td>
-                    <td>Coding Club</td>
-                    <td>10/02/2026 10:00</td>
-                    <td>10/02/2026 12:00</td>
-                    <td>Alice, Bob</td>
-                    <td class="actions">
-                        <button class="btn btn-primary">Download CSV</button>
-                        <button class="btn btn-secondary">Participants</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+    <!-- EVENTS TABLE -->
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Event Name</th>
+                <th>Club</th>
+                <th>Venue</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Coordinators</th>
+            </tr>
+        </thead>
+        <tbody id="eventTable">
+            <!-- Filled by JS -->
+        </tbody>
+    </table>
 
-    <section class="form-section">
-        <h2>Create New Event</h2>
+    <!-- CREATE EVENT -->
+    <h2>Create New Event</h2>
 
-        <form class="event-form">
-            <input type="text" placeholder="Event Name" required>
-            <input type="text" placeholder="Club Name" required>
-            <input type="datetime-local" required>
-            <input type="datetime-local" required>
-            <input type="text" placeholder="Coordinators (name,email; ...)" required>
-            <button type="submit" class="btn btn-primary">Create Event</button>
-        </form>
-    </section>
+    <div class="form-row">
+        <input type="text" id="name" placeholder="Event Name">
 
-</main>
+        <!-- CLUB SELECT -->
+        <select id="club">
+            <option value="">Select Club</option>
+            <option>Designers Club</option>
+            <option>CodeChef VIT</option>
+            <option>Google Developer Student Club (GDSC)</option>
+            <option>Linux Club</option>
+            <option>Robotics Club</option>
+            <option>Data Analytics Club</option>
+            <option>BIOSPHERE</option>
+            <option>Health Club</option>
+            <option>National Service Scheme (NSS)</option>
+            <option>Rotaract Club</option>
+            <option>Youth Red Cross (YRC)</option>
+            <option>Culture IT</option>
+            <option>Dance Club</option>
+            <option>Music Club</option>
+            <option>Sports Club</option>
+            <option>English Literary Association</option>
+            <option>Hindi Literary Association</option>
+            <option>Team ASTREx</option>
+            <option>Team Ignition</option>
+            <option>Team Shaurya Racing</option>
+        </select>
 
-<footer class="footer">
+        <!-- VENUE SELECT -->
+        <select id="venue">
+            <option value="">Select Venue</option>
+            <option>MG Auditorium</option>
+            <option>Netaji Auditorium</option>
+            <option>Kamarajar Auditorium</option>
+            <option>VOC Auditorium</option>
+            <option>Clock Court</option>
+            <option>AB1 Mini Conference Room</option>
+            <option>Basketball Court</option>
+            <option>Mini Football Ground</option>
+        </select>
+
+        <input type="datetime-local" id="start">
+        <input type="datetime-local" id="end">
+
+        <input type="text" id="coord" placeholder="Coordinators (comma separated)">
+
+        <button onclick="addEvent()">Create Event</button>
+    </div>
+
+</div>
+
+<footer>
     © 2026 EventFlow. All rights reserved.
 </footer>
 
+<script src="../js/admin.js"></script>
 </body>
 </html>
+

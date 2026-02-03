@@ -1,106 +1,74 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
 body {
-    background: linear-gradient(135deg, #7ca7f8, #63c2f5);
-    color: #ffffff;
-    min-height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #79b7f5;
 }
 
-.navbar {
-    background-color: #063da2;
-    padding: 16px;
+header {
+    background: #0b3fa5;
+    color: white;
+    padding: 15px;
     text-align: center;
 }
 
 .container {
-    padding: 30px;
+    padding: 20px;
 }
 
-.stats {
-    margin-bottom: 20px;
+h2, h3 {
+    color: white;
 }
 
-.stats span {
-    color: #007bff;
-}
-
-.table-section {
-    margin-bottom: 40px;
-    overflow-x: auto;
-}
-
-.event-table {
+/* TABLE */
+table {
     width: 100%;
     border-collapse: collapse;
-    background-color: rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    overflow: hidden;
+    margin-bottom: 30px;
 }
 
-.event-table thead {
-    background-color: #063da2;
-}
-
-.event-table th,
-.event-table td {
-    padding: 12px;
-    text-align: left;
-}
-
-.event-table tbody tr:hover {
-    background-color: rgba(0, 123, 255, 0.15);
-}
-
-.actions {
-    display: flex;
-    gap: 8px;
-}
-
-.btn {
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    color: #ffffff;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.btn-primary {
-    background-color: #007bff;
-}
-
-.btn-secondary {
-    background-color: #0493e0;
-}
-
-.btn:hover {
-    opacity: 0.9;
-}
-
-.form-section h2 {
-    margin-bottom: 16px;
-}
-
-.event-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-}
-
-.event-form input {
+th {
+    background: #0b3fa5;
+    color: white;
     padding: 10px;
-    border-radius: 4px;
-    border: none;
 }
 
-.footer {
+td {
+    background: #8ec3fa;
+    padding: 10px;
     text-align: center;
-    padding: 16px;
-    background-color: #063da2;
-    margin-top: 40px;
 }
+
+/* FORM */
+.form-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+input, select {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    width: 200px;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* FOOTER */
+footer {
+    background: #0b3fa5;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
