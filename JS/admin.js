@@ -1,5 +1,39 @@
 let events = JSON.parse(localStorage.getItem("events")) || [];
 
+// Admin auth modal interactions
+document.addEventListener('DOMContentLoaded', () => {
+    const openAdmin = document.getElementById('openAdminSignIn');
+    const adminModal = document.getElementById('adminAuth');
+    const closeAdmin = document.getElementById('closeAdminAuth');
+    const doAdmin = document.getElementById('doAdminSignIn');
+    const adminMsg = document.getElementById('adminAuthMsg');
+    const showPwd = document.getElementById('showAdminPwd');
+
+    const ADMIN_EMAIL = 'admin@eventflow.local';
+    const ADMIN_PWD = 'admin123';
+
+    function showAdminModal(){ adminModal && adminModal.setAttribute('aria-hidden','false'); }
+    function hideAdminModal(){ adminModal && adminModal.setAttribute('aria-hidden','true'); adminMsg && (adminMsg.innerText=''); }
+
+    openAdmin && openAdmin.addEventListener('click', showAdminModal);
+    closeAdmin && closeAdmin.addEventListener('click', hideAdminModal);
+    showPwd && showPwd.addEventListener('change', function(){ document.getElementById('adminPassword').type = this.checked ? 'text' : 'password'; });
+
+    doAdmin && doAdmin.addEventListener('click', () => {
+        const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+        const pwd = document.getElementById('adminPassword').value;
+        if(email === ADMIN_EMAIL && pwd === ADMIN_PWD){
+            adminMsg.innerText = 'Welcome, Admin!';
+            localStorage.setItem('currentAdmin', JSON.stringify({ email }));
+            setTimeout(hideAdminModal, 700);
+        } else {
+            adminMsg.innerText = 'Invalid admin credentials';
+        }
+    });
+
+    if(location.hash === '#signin') showAdminModal();
+});
+
 function renderEvents() {
     let table = document.getElementById("eventTable");
     table.innerHTML = "";

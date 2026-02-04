@@ -9,6 +9,9 @@
 
 <header>
     <h1>EventFlow — Admin</h1>
+    <div class="header-actions">
+        <button id="openAdminSignIn">Sign In</button>
+    </div>
 </header>
 
 <div class="container">
@@ -90,8 +93,22 @@
 <footer>
     © 2026 EventFlow. All rights reserved.
 </footer>
+</footer>
 
-<script src="../js/admin.js"></script>
+<!-- Admin Sign-in Modal -->
+<div id="adminAuth" class="modal" aria-hidden="true">
+    <div class="modal-content small">
+        <button class="modal-close" id="closeAdminAuth">✕</button>
+        <h3>Admin Sign In</h3>
+        <input type="email" id="adminEmail" placeholder="Admin email">
+        <input type="password" id="adminPassword" placeholder="Password">
+        <div class="form-row-small"><input type="checkbox" id="showAdminPwd"><label for="showAdminPwd">Show</label></div>
+        <button id="doAdminSignIn">Sign In</button>
+        <div id="adminAuthMsg" class="auth-msg"></div>
+    </div>
+</div>
+
+<script src="../JS/admin.js"></script>
 </body>
 </html>
 

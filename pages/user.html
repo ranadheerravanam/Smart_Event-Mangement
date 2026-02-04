@@ -23,6 +23,9 @@
 
     <a href="https://eventhubcc.vit.ac.in/EventHub/"> <button>Register Events</button>
     </a>
+
+    <button id="openSignIn" class="link-btn">Sign In</button>
+    <button id="openSignUp" class="link-btn">Sign Up</button>
 </div>
 
 <div class="stats-container">
@@ -125,6 +128,36 @@ function scrollToEvents() {
     });
 }
 </script>
+
+<!-- Sign-in / Sign-up Modals -->
+<div id="authModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+        <button class="modal-close" id="closeAuth">✕</button>
+        <div class="auth-tabs">
+            <button id="tabSignIn" class="active">Sign In</button>
+            <button id="tabSignUp">Sign Up</button>
+        </div>
+
+        <form id="signInForm" class="auth-form">
+            <input type="email" id="signinEmail" placeholder="Email" required>
+            <input type="password" id="signinPassword" placeholder="Password" required>
+            <div class="form-row-small"><input type="checkbox" id="showSignInPwd"><label for="showSignInPwd">Show</label></div>
+            <button type="button" id="doSignIn">Sign In</button>
+        </form>
+
+        <form id="signUpForm" class="auth-form hidden">
+            <input type="text" id="signupName" placeholder="Full name" required>
+            <input type="email" id="signupEmail" placeholder="Email" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <input type="password" id="signupPassword2" placeholder="Confirm password" required>
+            <div class="form-row-small"><input type="checkbox" id="showSignUpPwd"><label for="showSignUpPwd">Show</label></div>
+            <button type="button" id="doSignUp">Create account</button>
+        </form>
+        <div id="authMsg" class="auth-msg"></div>
+    </div>
+</div>
+
+<script src="../JS/user.js"></script>
 
 </body>
 </html>
