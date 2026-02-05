@@ -1,72 +1,131 @@
 // User auth interactions: sign-in / sign-up modal, basic localStorage handling
 document.addEventListener('DOMContentLoaded', () => {
-	const authModal = document.getElementById('authModal');
-	const openSignIn = document.getElementById('openSignIn');
-	const openSignUp = document.getElementById('openSignUp');
-	const closeAuth = document.getElementById('closeAuth');
-	const tabSignIn = document.getElementById('tabSignIn');
-	const tabSignUp = document.getElementById('tabSignUp');
-	const signInForm = document.getElementById('signInForm');
-	const signUpForm = document.getElementById('signUpForm');
-	const doSignIn = document.getElementById('doSignIn');
-	const doSignUp = document.getElementById('doSignUp');
-	const authMsg = document.getElementById('authMsg');
+    const authModal = document.getElementById('authModal');
+    const openSignIn = document.getElementById('openSignIn');
+    const openSignUp = document.getElementById('openSignUp');
+    const closeAuth = document.getElementById('closeAuth');
+    const tabSignIn = document.getElementById('tabSignIn');
+    const tabSignUp = document.getElementById('tabSignUp');
+    const signInForm = document.getElementById('signInForm');
+    const signUpForm = document.getElementById('signUpForm');
+    const doSignIn = document.getElementById('doSignIn');
+    const doSignUp = document.getElementById('doSignUp');
+    const authMsg = document.getElementById('authMsg');
 
-	function showModal(openTab='signin'){
-		authModal.setAttribute('aria-hidden','false');
-		if(openTab === 'signup') switchToSignUp(); else switchToSignIn();
-	}
-	function hideModal(){ authModal.setAttribute('aria-hidden','true'); authMsg.innerText = '' }
+    function showModal(openTab='signin'){
+        authModal.setAttribute('aria-hidden','false');
+        if(openTab === 'signup') switchToSignUp(); else switchToSignIn();
+    }
+    function hideModal(){ if(authModal) authModal.setAttribute('aria-hidden','true'); if(authMsg) authMsg.innerText = '' }
 
-	function switchToSignIn(){ tabSignIn.classList.add('active'); tabSignUp.classList.remove('active'); signInForm.classList.remove('hidden'); signUpForm.classList.add('hidden') }
-	function switchToSignUp(){ tabSignUp.classList.add('active'); tabSignIn.classList.remove('active'); signUpForm.classList.remove('hidden'); signInForm.classList.add('hidden') }
+    function switchToSignIn(){ tabSignIn?.classList.add('active'); tabSignUp?.classList.remove('active'); signInForm?.classList.remove('hidden'); signUpForm?.classList.add('hidden') }
+    function switchToSignUp(){ tabSignUp?.classList.add('active'); tabSignIn?.classList.remove('active'); signUpForm?.classList.remove('hidden'); signInForm?.classList.add('hidden') }
 
-	openSignIn && openSignIn.addEventListener('click', () => showModal('signin'));
-	openSignUp && openSignUp.addEventListener('click', () => showModal('signup'));
-	closeAuth && closeAuth.addEventListener('click', hideModal);
-	tabSignIn && tabSignIn.addEventListener('click', switchToSignIn);
-	tabSignUp && tabSignUp.addEventListener('click', switchToSignUp);
+    openSignIn && openSignIn.addEventListener('click', () => showModal('signin'));
+    openSignUp && openSignUp.addEventListener('click', () => showModal('signup'));
+    closeAuth && closeAuth.addEventListener('click', hideModal);
+    tabSignIn && tabSignIn.addEventListener('click', switchToSignIn);
+    tabSignUp && tabSignUp.addEventListener('click', switchToSignUp);
 
-	// password toggles
-	document.getElementById('showSignInPwd')?.addEventListener('change', function(){
-		const p = document.getElementById('signinPassword'); p.type = this.checked ? 'text' : 'password';
-	});
-	document.getElementById('showSignUpPwd')?.addEventListener('change', function(){
-		document.getElementById('signupPassword').type = this.checked ? 'text' : 'password';
-		document.getElementById('signupPassword2').type = this.checked ? 'text' : 'password';
-	});
+    // password toggles
+    document.getElementById('showSignInPwd')?.addEventListener('change', function(){
+        const p = document.getElementById('signinPassword'); if(p) p.type = this.checked ? 'text' : 'password';
+    });
+    document.getElementById('showSignUpPwd')?.addEventListener('change', function(){
+        const a = document.getElementById('signupPassword'); const b = document.getElementById('signupPassword2');
+        if(a) a.type = this.checked ? 'text' : 'password';
+        if(b) b.type = this.checked ? 'text' : 'password';
+    });
 
-	function getUsers(){ return JSON.parse(localStorage.getItem('users')||'[]') }
-	function saveUsers(u){ localStorage.setItem('users', JSON.stringify(u)) }
+    function getUsers(){ return JSON.parse(localStorage.getItem('users')||'[]') }
+    function saveUsers(u){ localStorage.setItem('users', JSON.stringify(u)) }
 
-	doSignUp && doSignUp.addEventListener('click', () => {
-		const name = document.getElementById('signupName').value.trim();
-		const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-		const pwd = document.getElementById('signupPassword').value;
-		const pwd2 = document.getElementById('signupPassword2').value;
-		if(!name || !email || !pwd){ authMsg.innerText = 'Please fill all fields'; return }
-		if(pwd !== pwd2){ authMsg.innerText = 'Passwords do not match'; return }
-		const users = getUsers();
-		if(users.some(u=>u.email===email)){ authMsg.innerText = 'Account already exists. Try signing in.'; return }
-		users.push({ name, email, password: pwd });
-		saveUsers(users);
-		authMsg.innerText = 'Account created! You can now sign in.';
-		switchToSignIn();
-	});
 
-	doSignIn && doSignIn.addEventListener('click', () => {
-		const email = document.getElementById('signinEmail').value.trim().toLowerCase();
-		const pwd = document.getElementById('signinPassword').value;
-		const users = getUsers();
-		const u = users.find(x=>x.email===email && x.password===pwd);
-		if(!u){ authMsg.innerText = 'Invalid credentials'; return }
-		authMsg.innerText = `Welcome, ${u.name || 'User'}!`;
-		// store current user session (simple)
-		localStorage.setItem('currentUser', JSON.stringify({ name: u.name, email: u.email }));
-		setTimeout(()=> hideModal(), 900);
-	});
+    // Password strength helper with explicit requirement feedback
+    function evaluatePasswordStrength(p){
+        const res = { score: 0, label: 'Too weak', lengthOk: false, hasLower:false, hasUpper:false, hasNumber:false, hasSpecial:false, missing: [] };
+        if(!p || p.length === 0){ res.label = 'Too short'; res.missing = ['8+ characters', 'One uppercase letter', 'One special character']; return res }
+        res.lengthOk = p.length >= 8;
+        res.hasLower = /[a-z]/.test(p);
+        res.hasUpper = /[A-Z]/.test(p);
+        res.hasNumber = /\d/.test(p);
+        res.hasSpecial = /[^A-Za-z0-9]/.test(p);
+        // collect missing required items (explicit)
+        if(!res.lengthOk) res.missing.push('8+ characters');
+        if(!res.hasUpper) res.missing.push('One uppercase letter');
+        if(!res.hasSpecial) res.missing.push('One special character');
+        // compute a score 0..4 for the bar
+        const checks = [res.lengthOk, res.hasLower, res.hasUpper, res.hasNumber, res.hasSpecial];
+        const total = checks.filter(Boolean).length; // 0..5
+        const scoreIndex = Math.max(0, Math.min(4, total - 1));
+        const labels = ['Too short','Weak','Fair','Good','Strong'];
+        res.score = scoreIndex;
+        res.label = (res.missing.length > 0) ? 'Needs: ' + res.missing.join(', ') : labels[scoreIndex];
+        return res;
+    }
 
-	// open modal on hash
-	if(location.hash === '#signin') showModal('signin');
-	if(location.hash === '#signup') showModal('signup');
+    // live update strength indicator if present
+    const pwdEl = document.getElementById('signupPassword');
+    const pwdBar = document.getElementById('pwdStrength');
+    const pwdLabel = document.getElementById('pwdStrengthLabel');
+    if(pwdEl){
+        pwdEl.addEventListener('input', function(){
+            const r = evaluatePasswordStrength(this.value);
+            if(pwdBar) pwdBar.setAttribute('data-strength', String(r.score));
+            if(pwdLabel) pwdLabel.innerText = r.label;
+        });
+    }
+
+    // central signup handler so other pages can call it (exposed as window.doSignUpClick)
+    function handleSignUp(){
+        const nameEl = document.getElementById('signupName');
+        const emailEl = document.getElementById('signupEmail');
+        const pwdEl = document.getElementById('signupPassword');
+        const pwd2El = document.getElementById('signupPassword2');
+        const authMsgEl = document.getElementById('authMsg');
+        const name = nameEl ? nameEl.value.trim() : '';
+        const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
+        const pwd = pwdEl ? pwdEl.value : '';
+        const pwd2 = pwd2El ? pwd2El.value : '';
+        if(!authMsgEl) return;
+        authMsgEl.innerText = '';
+        if(!name || !email || !pwd){ authMsgEl.innerText = 'Please fill all fields'; return }
+        if(pwd !== pwd2){ authMsgEl.innerText = 'Passwords do not match'; return }
+        const r = evaluatePasswordStrength(pwd);
+        if(r.missing.length > 0){ authMsgEl.innerText = 'Password requirements: ' + r.missing.join(', '); return }
+        // minimal strength threshold (require at least 3 checks true: length, upper, lower/number/special)
+        if(r.score < 2){ authMsgEl.innerText = 'Password is too weak — choose a stronger password.'; return }
+        const users = getUsers();
+        if(users.some(u=>u.email===email)){ authMsgEl.innerText = 'Account already exists. Try signing in.'; return }
+        users.push({ name, email, password: pwd });
+        saveUsers(users);
+        authMsgEl.innerText = 'Account created! You can now sign in.';
+        // if modal present, switch to sign-in
+        if(typeof switchToSignIn === 'function') switchToSignIn();
+    }
+
+    // attach handler and expose it
+    if(doSignUp) doSignUp.addEventListener('click', handleSignUp);
+    window.doSignUpClick = handleSignUp;
+
+    if(doSignIn) doSignIn.addEventListener('click', () => {
+        const email = document.getElementById('signinEmail').value.trim().toLowerCase();
+        const pwd = document.getElementById('signinPassword').value;
+        const users = getUsers();
+        const u = users.find(x=>x.email===email && x.password===pwd);
+        if(!authMsg){
+            const localAuth = document.getElementById('authMsg');
+            if(localAuth) localAuth.innerText = 'Invalid credentials';
+            return;
+        }
+        if(!u){ authMsg.innerText = 'Invalid credentials'; return }
+        authMsg.innerText = `Welcome, ${u.name || 'User'}!`;
+        // store current user session (simple)
+        localStorage.setItem('currentUser', JSON.stringify({ name: u.name, email: u.email }));
+        setTimeout(()=> hideModal(), 900);
+    });
+
+    // open modal on hash
+    if(location.hash === '#signin') showModal('signin');
+    if(location.hash === '#signup') showModal('signup');
 });

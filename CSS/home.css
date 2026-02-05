@@ -87,6 +87,12 @@ main{
     border-radius: 8px;
     font-size: 0.9rem;
 }
+/* Card action buttons */
+.card-actions{ display:flex; gap:10px; justify-content:center; margin-top:14px }
+.card-actions .btn{ margin-top: 0; padding: 10px 18px; border-radius: 10px; font-weight:700 }
+.btn-primary{ background: linear-gradient(90deg,#0458d6,#06a3ff); color: white; box-shadow: 0 6px 18px rgba(4,88,214,0.18); }
+.btn-outline{ background: transparent; border: 1px solid #d1d5db; color: #374151 }
+.btn-outline:hover{ background: #f8fafc }
 footer{
     background: #111827;
     color: #9ca3af;
