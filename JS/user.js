@@ -76,6 +76,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Simple client-side math CAPTCHA for sign-in
+    let currentCaptchaAnswer = null;
+    function generateCaptcha(){
+        // simple random math: a + b where a in 1..9, b in 1..9
+        const a = Math.floor(Math.random()*9)+1;
+        const b = Math.floor(Math.random()*9)+1;
+        currentCaptchaAnswer = String(a + b);
+        const el = document.getElementById('captchaQuestion');
+        if(el) el.innerText = `What is ${a} + ${b}?`;
+        const ans = document.getElementById('captchaAnswer'); if(ans) ans.value = '';
+    }
+    document.getElementById('refreshCaptcha')?.addEventListener('click', generateCaptcha);
+
+
     // central signup handler so other pages can call it (exposed as window.doSignUpClick)
     function handleSignUp(){
         const nameEl = document.getElementById('signupName');
@@ -111,6 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if(doSignIn) doSignIn.addEventListener('click', () => {
         const email = document.getElementById('signinEmail').value.trim().toLowerCase();
         const pwd = document.getElementById('signinPassword').value;
+        const captchaVal = document.getElementById('captchaAnswer') ? document.getElementById('captchaAnswer').value.trim() : '';
+        if(!captchaVal || captchaVal !== currentCaptchaAnswer){
+            if(authMsg) authMsg.innerText = 'CAPTCHA incorrect — try again.';
+            generateCaptcha();
+            return;
+        }
         const users = getUsers();
         const u = users.find(x=>x.email===email && x.password===pwd);
         if(!authMsg){
@@ -124,6 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('currentUser', JSON.stringify({ name: u.name, email: u.email }));
         setTimeout(()=> hideModal(), 900);
     });
+
+    // generate initial captcha when modal exists / on load
+    if(document.getElementById('authModal')) generateCaptcha();
 
     // open modal on hash
     if(location.hash === '#signin') showModal('signin');

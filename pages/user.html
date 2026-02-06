@@ -34,6 +34,39 @@
         Events
     </div>
 
+    <!-- Events grid -->
+    <div class="events-grid" id="eventsGrid">
+        <div class="event-card">
+            <div class="event-header">
+                <h3>Design Sprint 2026</h3>
+                <span class="chip">Designers Club</span>
+            </div>
+            <p class="event-meta">MG Auditorium • Mar 12, 2026 • 10:00 AM</p>
+            <p class="event-desc">A hands-on sprint to prototype UI ideas and rapid user testing.</p>
+            <div class="event-actions"><button class="btn-primary">Register</button><button class="btn-outline">Details</button></div>
+        </div>
+
+        <div class="event-card">
+            <div class="event-header">
+                <h3>Robotics Meetup</h3>
+                <span class="chip">Robotics Club</span>
+            </div>
+            <p class="event-meta">Clock Court • Mar 18, 2026 • 3:00 PM</p>
+            <p class="event-desc">Showcase of autonomous robots and Q&A with team leads.</p>
+            <div class="event-actions"><button class="btn-primary">Register</button><button class="btn-outline">Details</button></div>
+        </div>
+
+        <div class="event-card">
+            <div class="event-header">
+                <h3>Finance Workshop</h3>
+                <span class="chip">VIT Finance & Management</span>
+            </div>
+            <p class="event-meta">Kamarajar Auditorium • Mar 25, 2026 • 11:00 AM</p>
+            <p class="event-desc">Basics of investing, budgeting and campus start-up funding opportunities.</p>
+            <div class="event-actions"><button class="btn-primary">Register</button><button class="btn-outline">Details</button></div>
+        </div>
+    </div>
+
     <div class="stat-box">
         <div class="stat-number">70+</div>
         Clubs
@@ -142,6 +175,11 @@ function scrollToEvents() {
             <input type="email" id="signinEmail" placeholder="Email" required>
             <input type="password" id="signinPassword" placeholder="Password" required>
             <div class="form-row-small"><input type="checkbox" id="showSignInPwd"><label for="showSignInPwd">Show</label></div>
+            <div class="captcha-row">
+                <div id="captchaQuestion" class="captcha-question">What is 3 + 4?</div>
+                <button type="button" id="refreshCaptcha" title="New challenge">↻</button>
+                <input type="text" id="captchaAnswer" placeholder="Answer" aria-label="CAPTCHA answer" required>
+            </div>
             <button type="button" id="doSignIn">Sign In</button>
         </form>
 
