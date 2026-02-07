@@ -199,6 +199,35 @@ function scrollToEvents() {
 
 <script src="../JS/user.js"></script>
 
+<!-- metrics updater: track page views, visitors and registrations (applied) -->
+<script>
+;(function(){
+    try{
+        const pv = Number(localStorage.getItem('pageViews')||0);
+        localStorage.setItem('pageViews', String(pv + 1));
+
+        if(!localStorage.getItem('visitorSeen')){
+            const vis = Number(localStorage.getItem('visitors')||0);
+            localStorage.setItem('visitors', String(vis + 1));
+            localStorage.setItem('visitorSeen', '1');
+        }
+
+        // Wire up register buttons to increment appliedCount
+        document.addEventListener('DOMContentLoaded', ()=>{
+            document.querySelectorAll('.event-actions .btn-primary').forEach(btn=>{
+                btn.addEventListener('click', ()=>{
+                    const a = Number(localStorage.getItem('appliedCount')||0);
+                    localStorage.setItem('appliedCount', String(a+1));
+                    // also notify other tabs
+                    try{ localStorage.setItem('applied-last', Date.now().toString()) }catch(e){}
+                    alert('Thank you for applying/ registering — this demo increments the applied counter.');
+                })
+            })
+        })
+    }catch(e){ console.warn('metrics update failed', e) }
+})();
+</script>
+
 </body>
 </html>
 

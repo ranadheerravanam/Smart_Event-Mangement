@@ -1,19 +1,20 @@
+:root{ --brand-a:#063da2; --brand-b:#06a3ff; --card-bg: rgba(255,255,255,0.96); }
+
+*{box-sizing:border-box}
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #063da2, #0493e0);
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+    background: linear-gradient(90deg,var(--brand-a), var(--brand-b));
     color: white;
     text-align: center;
     overflow-x: hidden;
 }
 
-/* Improved typography */
-body { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial; }
-
 /* HEADER */
 header {
-    background: rgba(255,255,255,0.2);
-    padding: 15px;
+    background: rgba(255,255,255,0.08);
+    padding: 14px 18px;
     display: flex;
     align-items: center;
 }
@@ -28,6 +29,8 @@ h1 {
     font-size: 50px;
     font-weight: bold;
 }
+
+.subtitle{ color: rgba(255,255,255,0.95) }
 
 .subtitle {
     font-size: 18px;
@@ -76,9 +79,9 @@ h1 {
 }
 
 .stat-box {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.14);
     width: 160px;
-    padding: 25px;
+    padding: 18px;
     border-radius: 12px;
 }
 
@@ -117,6 +120,11 @@ h1 {
 .event-actions{ display:flex; gap:8px }
 .btn-primary{ background: linear-gradient(90deg,#0458d6,#06a3ff); color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer }
 .btn-outline{ background:transparent; border:1px solid #cbd5e1; color:#334155; padding:8px 12px; border-radius:8px; cursor:pointer }
+
+/* Make register buttons slightly larger for call-to-action */
+.event-actions .btn-primary{ padding:10px 14px; font-weight:700 }
+
+@media (max-width:720px){ .top-buttons{ display:flex; flex-direction:column; gap:12px } .stat-box{ width: 46% } }
 
 /* CAPTCHA row */
 .captcha-row{ display:flex; gap:8px; align-items:center }

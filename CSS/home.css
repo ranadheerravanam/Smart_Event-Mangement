@@ -1,28 +1,30 @@
-*{
-    box-sizing: border-box;
+:root{
+    --bg:#f4f6fb;
+    --card:#ffffff;
+    --primary:#2563eb;
+    --muted:#6b7280;
 }
+
+*{box-sizing:border-box}
 
 body{
     margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: #f4f6fb;
-    color: #222;
+    font-family: Inter, 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: #111827;
+    font-size:16px; -webkit-font-smoothing:antialiased
 }
-
-/* Slightly larger base font and subtle smoothing */
-body{ font-size:16px; -webkit-font-smoothing:antialiased }
 
 nav{
-    background: linear-gradient(135deg, #1f2937, #111827);
+    background: linear-gradient(90deg,#0f172a,#071433);
     color: white;
-    text-align: center;
-    padding: 20px 0;
+    padding: 22px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
-nav h1{
-    margin: 0;
-    font-size: 2rem;
-}
+nav h1{ margin:0; font-size:1.6rem }
 
 .tagline{
     font-size: 0.95rem;
@@ -46,13 +48,13 @@ main{
 }
 
 .card{
-    background: white;
+    background: var(--card);
     width: 280px;
-    padding: 30px 20px;
+    padding: 26px 18px;
     text-align: center;
     border-radius: 14px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
 }
 
 .card:hover{
@@ -93,6 +95,8 @@ main{
     border-radius: 8px;
     font-size: 0.9rem;
 }
+/* small responsive tweaks */
+@media (max-width:720px){ .image-row{ gap:18px } .card{ width: 100%; max-width: 360px } nav{ padding:16px } }
 /* Card action buttons */
 .card-actions{ display:flex; gap:10px; justify-content:center; margin-top:14px }
 .card-actions .btn{ margin-top: 0; padding: 10px 18px; border-radius: 10px; font-weight:700 }

@@ -102,3 +102,25 @@ function addEvent() {
 
 renderEvents();
 
+/* METRICS: render counts from localStorage */
+function getNumber(key){ return Number(localStorage.getItem(key) || 0) }
+
+function renderMetrics(){
+    const pv = getNumber('pageViews');
+    const vis = getNumber('visitors');
+    const applied = getNumber('appliedCount');
+
+    const elPV = document.getElementById('pageViewsCount');
+    const elVis = document.getElementById('visitorsCount');
+    const elApplied = document.getElementById('appliedCount');
+
+    if(elPV) elPV.innerText = pv;
+    if(elVis) elVis.innerText = vis;
+    if(elApplied) elApplied.innerText = applied;
+}
+
+renderMetrics();
+
+// Refresh metrics when localStorage changes from other tabs/windows
+window.addEventListener('storage', function(){ renderMetrics(); });
+
