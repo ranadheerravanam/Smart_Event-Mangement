@@ -8,22 +8,75 @@ document.addEventListener('DOMContentLoaded', () => {
     const doAdmin = document.getElementById('doAdminSignIn');
     const adminMsg = document.getElementById('adminAuthMsg');
     const showPwd = document.getElementById('showAdminPwd');
+    const refreshAdminOTP = document.getElementById('adminRefreshOTP');
 
     const ADMIN_EMAIL = 'admin@eventflow.local';
     const ADMIN_PWD = 'admin123';
 
-    function showAdminModal(){ adminModal && adminModal.setAttribute('aria-hidden','false'); }
-    function hideAdminModal(){ adminModal && adminModal.setAttribute('aria-hidden','true'); adminMsg && (adminMsg.innerText=''); }
+    let currentAdminOTP = null;
+
+    function generateAdminOTP() {
+        // Generate a random 6-digit OTP
+        currentAdminOTP = String(Math.floor(100000 + Math.random() * 900000));
+        const otpDisplay = document.getElementById('adminOtpDisplay');
+        if (otpDisplay) {
+            otpDisplay.innerText = currentAdminOTP;
+            // Add pulse animation
+            otpDisplay.style.animation = 'none';
+            setTimeout(() => {
+                otpDisplay.style.animation = 'pulse 2s ease-in-out infinite';
+            }, 10);
+        }
+        const otpInput = document.getElementById('adminOtpInput');
+        if (otpInput) otpInput.value = '';
+    }
+
+    function showAdminModal() {
+        adminModal && adminModal.setAttribute('aria-hidden', 'false');
+        generateAdminOTP();
+    }
+
+    function hideAdminModal() {
+        adminModal && adminModal.setAttribute('aria-hidden', 'true');
+        adminMsg && (adminMsg.innerText = '');
+    }
 
     openAdmin && openAdmin.addEventListener('click', showAdminModal);
     closeAdmin && closeAdmin.addEventListener('click', hideAdminModal);
-    showPwd && showPwd.addEventListener('change', function(){ document.getElementById('adminPassword').type = this.checked ? 'text' : 'password'; });
+    
+    if (showPwd) {
+        showPwd.addEventListener('change', function() {
+            document.getElementById('adminPassword').type = this.checked ? 'text' : 'password';
+        });
+    }
+
+    // Refresh OTP button handler
+    if (refreshAdminOTP) {
+        refreshAdminOTP.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateAdminOTP();
+        });
+    }
 
     doAdmin && doAdmin.addEventListener('click', () => {
         const email = document.getElementById('adminEmail').value.trim().toLowerCase();
         const pwd = document.getElementById('adminPassword').value;
-        if(email === ADMIN_EMAIL && pwd === ADMIN_PWD){
-            adminMsg.innerText = 'Welcome, Admin!';
+        const otpValue = document.getElementById('adminOtpInput') ? document.getElementById('adminOtpInput').value.trim() : '';
+
+        // Validate OTP
+        if (!otpValue) {
+            adminMsg.innerText = '📱 Please enter the OTP displayed above.';
+            return;
+        }
+        if (otpValue !== currentAdminOTP) {
+            adminMsg.innerText = '❌ Incorrect OTP. Try again or generate a new one.';
+            generateAdminOTP();
+            return;
+        }
+
+        // Validate credentials
+        if (email === ADMIN_EMAIL && pwd === ADMIN_PWD) {
+            adminMsg.innerText = '✅ Welcome, Admin! OTP Verified.';
             localStorage.setItem('currentAdmin', JSON.stringify({ email }));
             setTimeout(hideAdminModal, 700);
         } else {
@@ -31,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    if(location.hash === '#signin') showAdminModal();
+    if (location.hash === '#signin') showAdminModal();
 });
 
 function renderEvents() {
@@ -103,9 +156,9 @@ function addEvent() {
 renderEvents();
 
 /* METRICS: render counts from localStorage */
-function getNumber(key){ return Number(localStorage.getItem(key) || 0) }
+function getNumber(key) { return Number(localStorage.getItem(key) || 0) }
 
-function renderMetrics(){
+function renderMetrics() {
     const pv = getNumber('pageViews');
     const vis = getNumber('visitors');
     const applied = getNumber('appliedCount');
@@ -114,13 +167,14 @@ function renderMetrics(){
     const elVis = document.getElementById('visitorsCount');
     const elApplied = document.getElementById('appliedCount');
 
-    if(elPV) elPV.innerText = pv;
-    if(elVis) elVis.innerText = vis;
-    if(elApplied) elApplied.innerText = applied;
+    if (elPV) elPV.innerText = pv;
+    if (elVis) elVis.innerText = vis;
+    if (elApplied) elApplied.innerText = applied;
 }
 
 renderMetrics();
 
 // Refresh metrics when localStorage changes from other tabs/windows
-window.addEventListener('storage', function(){ renderMetrics(); });
+window.addEventListener('storage', function() { renderMetrics(); });
+
 

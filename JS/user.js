@@ -12,14 +12,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const doSignUp = document.getElementById('doSignUp');
     const authMsg = document.getElementById('authMsg');
 
+    // OTP functionality
+    let currentOTP = null;
+    let currentCaptchaAnswer = null;
+
+    function generateOTP() {
+        // Generate a random 6-digit OTP
+        currentOTP = String(Math.floor(100000 + Math.random() * 900000));
+        const otpDisplay = document.getElementById('otpDisplay');
+        if (otpDisplay) {
+            otpDisplay.innerText = currentOTP;
+            // Add animation effect
+            otpDisplay.style.animation = 'none';
+            setTimeout(() => {
+                otpDisplay.style.animation = 'pulse 2s ease-in-out infinite';
+            }, 10);
+        }
+    }
+
+    // Refresh OTP button handler
+    const refreshOTPBtn = document.getElementById('refreshOTP');
+    if (refreshOTPBtn) {
+        refreshOTPBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateOTP();
+            const otpInput = document.getElementById('otpInput');
+            if (otpInput) otpInput.value = '';
+        });
+    }
+
     function showModal(openTab='signin'){
         authModal.setAttribute('aria-hidden','false');
         if(openTab === 'signup') switchToSignUp(); else switchToSignIn();
+        // Generate new OTP when modal opens
+        generateOTP();
     }
-    function hideModal(){ if(authModal) authModal.setAttribute('aria-hidden','true'); if(authMsg) authMsg.innerText = '' }
+    function hideModal(){ 
+        if(authModal) authModal.setAttribute('aria-hidden','true'); 
+        if(authMsg) authMsg.innerText = '';
+    }
 
-    function switchToSignIn(){ tabSignIn?.classList.add('active'); tabSignUp?.classList.remove('active'); signInForm?.classList.remove('hidden'); signUpForm?.classList.add('hidden') }
-    function switchToSignUp(){ tabSignUp?.classList.add('active'); tabSignIn?.classList.remove('active'); signUpForm?.classList.remove('hidden'); signInForm?.classList.add('hidden') }
+    function switchToSignIn(){ 
+        tabSignIn?.classList.add('active'); 
+        tabSignUp?.classList.remove('active'); 
+        signInForm?.classList.remove('hidden'); 
+        signUpForm?.classList.add('hidden');
+        generateOTP();
+    }
+    function switchToSignUp(){ 
+        tabSignUp?.classList.add('active'); 
+        tabSignIn?.classList.remove('active'); 
+        signUpForm?.classList.remove('hidden'); 
+        signInForm?.classList.add('hidden');
+    }
 
     openSignIn && openSignIn.addEventListener('click', () => showModal('signin'));
     openSignUp && openSignUp.addEventListener('click', () => showModal('signup'));
@@ -77,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Simple client-side math CAPTCHA for sign-in
-    let currentCaptchaAnswer = null;
     function generateCaptcha(){
         // simple random math: a + b where a in 1..9, b in 1..9
         const a = Math.floor(Math.random()*9)+1;
@@ -87,7 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if(el) el.innerText = `What is ${a} + ${b}?`;
         const ans = document.getElementById('captchaAnswer'); if(ans) ans.value = '';
     }
-    document.getElementById('refreshCaptcha')?.addEventListener('click', generateCaptcha);
+    document.getElementById('refreshCaptcha')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        generateCaptcha();
+    });
 
 
     // central signup handler so other pages can call it (exposed as window.doSignUpClick)
@@ -125,12 +172,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if(doSignIn) doSignIn.addEventListener('click', () => {
         const email = document.getElementById('signinEmail').value.trim().toLowerCase();
         const pwd = document.getElementById('signinPassword').value;
+        const otpValue = document.getElementById('otpInput') ? document.getElementById('otpInput').value.trim() : '';
         const captchaVal = document.getElementById('captchaAnswer') ? document.getElementById('captchaAnswer').value.trim() : '';
+        
+        // Validate OTP
+        if(!otpValue) {
+            if(authMsg) authMsg.innerText = '📱 Please enter the OTP displayed above.';
+            return;
+        }
+        if(otpValue !== currentOTP) {
+            if(authMsg) authMsg.innerText = '❌ Incorrect OTP. Try again or generate a new one.';
+            generateOTP();
+            document.getElementById('otpInput').value = '';
+            return;
+        }
+        
+        // Validate CAPTCHA
         if(!captchaVal || captchaVal !== currentCaptchaAnswer){
             if(authMsg) authMsg.innerText = 'CAPTCHA incorrect — try again.';
             generateCaptcha();
             return;
         }
+        
         const users = getUsers();
         const u = users.find(x=>x.email===email && x.password===pwd);
         if(!authMsg){
@@ -139,16 +202,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if(!u){ authMsg.innerText = 'Invalid credentials'; return }
-        authMsg.innerText = `Welcome, ${u.name || 'User'}!`;
+        authMsg.innerText = `✅ Welcome, ${u.name || 'User'}! OTP Verified.`;
         // store current user session (simple)
         localStorage.setItem('currentUser', JSON.stringify({ name: u.name, email: u.email }));
         setTimeout(()=> hideModal(), 900);
     });
 
     // generate initial captcha when modal exists / on load
-    if(document.getElementById('authModal')) generateCaptcha();
+    if(document.getElementById('authModal')) {
+        generateCaptcha();
+        generateOTP();
+    }
 
     // open modal on hash
     if(location.hash === '#signin') showModal('signin');
     if(location.hash === '#signup') showModal('signup');
 });
+

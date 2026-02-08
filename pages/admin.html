@@ -119,6 +119,12 @@
         <input type="email" id="adminEmail" placeholder="Admin email">
         <input type="password" id="adminPassword" placeholder="Password">
         <div class="form-row-small"><input type="checkbox" id="showAdminPwd"><label for="showAdminPwd">Show</label></div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin: 15px 0; padding: 15px; background: rgba(0,145,255,0.08); border-radius: 8px; border: 1px solid rgba(0,145,255,0.2);">
+            <div style="font-size: 0.85rem; color: #06a3ff; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">📱 One-Time Password</div>
+            <div id="adminOtpDisplay" style="background: linear-gradient(90deg, #06a3ff, #0458d6); color: white; padding: 16px; border-radius: 10px; text-align: center; font-size: 28px; font-weight: 800; letter-spacing: 4px; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">000000</div>
+            <button type="button" id="adminRefreshOTP" style="background: linear-gradient(90deg, #06a3ff, #0458d6); color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem;">🔄 New OTP</button>
+            <input type="text" id="adminOtpInput" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric" style="padding: 10px 12px; border-radius: 8px; border: 2px solid #06a3ff; text-align: center; letter-spacing: 2px; font-weight: 600;">
+        </div>
         <button id="doAdminSignIn">Sign In</button>
         <div id="adminAuthMsg" class="auth-msg"></div>
     </div>

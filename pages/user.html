@@ -175,6 +175,12 @@ function scrollToEvents() {
             <input type="email" id="signinEmail" placeholder="Email" required>
             <input type="password" id="signinPassword" placeholder="Password" required>
             <div class="form-row-small"><input type="checkbox" id="showSignInPwd"><label for="showSignInPwd">Show</label></div>
+            <div class="otp-section">
+                <div class="otp-label">📱 One-Time Password</div>
+                <div id="otpDisplay" class="otp-display">000000</div>
+                <button type="button" id="refreshOTP" class="otp-refresh-btn" title="Generate new OTP">🔄 New OTP</button>
+                <input type="text" id="otpInput" class="otp-input" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric" required>
+            </div>
             <div class="captcha-row">
                 <div id="captchaQuestion" class="captcha-question">What is 3 + 4?</div>
                 <button type="button" id="refreshCaptcha" title="New challenge">↻</button>
