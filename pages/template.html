@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VIT Academic Event Report</title>
+
+<style>
+:root{
+    --primary:#0b3c5d;
+    --accent:#c9a227;
+    --bg:#eef2f7;
+    --paper:#ffffff;
+    --text:#1f2933;
+}
+
+body{
+    margin:0;
+    padding:40px;
+    background:linear-gradient(135deg,#e9eef5,#f8fafc);
+    font-family:"Segoe UI", Arial, sans-serif;
+    color:var(--text);
+}
+
+/* ---------- ADMIN FORM ---------- */
+.form-box{
+    max-width:760px;
+    margin:0 auto 50px;
+    background:var(--paper);
+    padding:40px;
+    border-radius:18px;
+    box-shadow:0 20px 45px rgba(0,0,0,0.12);
+}
+
+.form-box h2{
+    text-align:center;
+    color:var(--primary);
+    margin-bottom:30px;
+    letter-spacing:0.6px;
+}
+
+input, textarea{
+    width:100%;
+    padding:14px;
+    margin:12px 0;
+    font-size:15px;
+    border-radius:10px;
+    border:1px solid #d6dce5;
+    background:#fbfdff;
+}
+
+textarea{
+    height:160px;
+    resize:none;
+}
+
+.btn{
+    width:100%;
+    padding:15px;
+    margin-top:15px;
+    font-size:16px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    color:#fff;
+    background:linear-gradient(135deg,var(--primary),#1f5f8b);
+}
+
+.btn.download{
+    background:linear-gradient(135deg,#198754,#2fbf71);
+}
+
+/* ---------- REPORT ---------- */
+.report{
+    display:none;
+    max-width:950px;
+    margin:0 auto;
+    background:var(--paper);
+    padding:70px;
+    border-radius:22px;
+    box-shadow:0 25px 60px rgba(0,0,0,0.18);
+    position:relative;
+}
+
+/* Decorative bar */
+.report::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:10px;
+    background:linear-gradient(90deg,var(--primary),var(--accent));
+    border-radius:22px 22px 0 0;
+}
+
+.header{
+    display:flex;
+    align-items:center;
+    gap:26px;
+    padding-bottom:20px;
+    border-bottom:3px solid var(--primary);
+}
+
+.header img{
+    width:95px;
+}
+
+.header h1{
+    margin:0;
+    font-size:30px;
+    color:var(--primary);
+}
+
+.header p{
+    margin-top:6px;
+    font-size:15px;
+    color:#555;
+    letter-spacing:0.4px;
+}
+
+/* Sections */
+.section{
+    margin-top:38px;
+}
+
+.section-title{
+    font-size:20px;
+    color:var(--primary);
+    margin-bottom:14px;
+    padding-left:14px;
+    border-left:6px solid var(--accent);
+}
+
+.kv{
+    font-size:16px;
+    line-height:1.9;
+}
+
+.kv span{
+    font-weight:600;
+    color:var(--primary);
+}
+
+.desc-box{
+    background:#f9fbfe;
+    padding:26px;
+    border-radius:14px;
+    border-left:6px solid var(--accent);
+    line-height:1.9;
+    font-size:16px;
+}
+
+/* Declaration */
+.declaration{
+    font-size:16px;
+    line-height:1.9;
+    background:#fdfefe;
+    padding:26px;
+    border-radius:14px;
+    border:1px solid #e1e7f0;
+}
+
+/* Footer */
+.footer{
+    margin-top:70px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.sign{
+    text-align:center;
+}
+
+.line{
+    width:260px;
+    border-top:2px solid #000;
+    margin-bottom:8px;
+}
+
+/* ---------- PRINT ---------- */
+@media print{
+    body *{
+        visibility:hidden;
+    }
+    .report, .report *{
+        visibility:visible;
+    }
+    .report{
+        position:absolute;
+        inset:0;
+        width:100%;
+        padding:50px;
+        box-shadow:none;
+        border-radius:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ADMIN INPUT FORM -->
+<div class="form-box">
+    <h2>Admin – Academic Event Report Entry</h2>
+
+    <input type="text" id="event" placeholder="Event Name">
+    <input type="date" id="date">
+    <input type="text" id="dept" placeholder="Organizing Department">
+    <input type="text" id="club" placeholder="Club / Chapter Name">
+    <input type="number" id="participants" placeholder="Number of Participants">
+    <textarea id="topics" placeholder="Topics Discussed / Detailed Event Summary"></textarea>
+    <input type="text" id="coord" placeholder="Event Coordinator Name">
+    <input type="text" id="faculty" placeholder="Faculty In-Charge Name">
+
+    <button class="btn" onclick="generate()">Generate Report</button>
+    <button class="btn download" onclick="downloadReport()">Download Report (PDF)</button>
+</div>
+
+<!-- REPORT DOCUMENT -->
+<div class="report" id="report">
+
+    <div class="header">
+        <img src="vitchennai.jpeg" alt="VIT Logo">
+        <div>
+            <h1>Vellore Institute of Technology</h1>
+            <p>Academic Event Completion Report</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">1. Event Overview</div>
+        <div class="kv">
+            <p><span>Event Name:</span> <span id="rEvent"></span></p>
+            <p><span>Date Conducted:</span> <span id="rDate"></span></p>
+            <p><span>Organizing Department:</span> <span id="rDept"></span></p>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">2. Topics Discussed</div>
+        <div class="desc-box" id="rTopics"></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">3. Declaration</div>
+        <div class="declaration">
+            <p>
+                This report is submitted for the kind perusal and academic records
+                of the Dean. The event was successfully organized by the
+                <strong id="rClub"></strong> under the
+                <strong id="rDept2"></strong> with active participation of
+                <strong id="rParticipants"></strong> participants. The event was
+                conducted in alignment with institutional objectives and achieved
+                its intended academic outcomes.
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="sign">
+            <div class="line"></div>
+            <p id="rCoord"></p>
+            <p>Event Coordinator</p>
+        </div>
+
+        <div class="sign">
+            <div class="line"></div>
+            <p id="rFaculty"></p>
+            <p>Faculty In-Charge</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function generate(){
+    rEvent.innerText = event.value;
+    rDate.innerText = date.value;
+    rDept.innerText = dept.value;
+    rDept2.innerText = dept.value;
+    rClub.innerText = club.value;
+    rParticipants.innerText = participants.value;
+    rTopics.innerText = topics.value;
+    rCoord.innerText = coord.value;
+    rFaculty.innerText = faculty.value;
+    report.style.display = "block";
+}
+
+function downloadReport(){
+    window.print();
+}
+</script>
+
+</body>
+</html>
+
