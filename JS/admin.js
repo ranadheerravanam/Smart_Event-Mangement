@@ -89,23 +89,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderEvents() {
     let table = document.getElementById("eventTable");
+    let tableSection = document.getElementById("tableSection");
+    let noEventsMsg = document.getElementById("noEventsMsg");
+    
     table.innerHTML = "";
+
+    if (events.length === 0) {
+        tableSection.style.display = "none";
+        return;
+    }
+
+    tableSection.style.display = "block";
+    noEventsMsg.style.display = events.length > 0 ? "none" : "block";
 
     events.forEach((e, i) => {
         table.innerHTML += `
-            <tr>
-                <td>${i + 1}</td>
-                <td>${e.name}</td>
-                <td>${e.club}</td>
-                <td>${e.venue}</td>
-                <td>${e.start}</td>
-                <td>${e.end}</td>
-                <td>${e.coord}</td>
+            <tr class="table-row-animate">
+                <td class="table-cell-index">${i + 1}</td>
+                <td class="table-cell">${e.name}</td>
+                <td class="table-cell">${e.club}</td>
+                <td class="table-cell">${e.venue}</td>
+                <td class="table-cell">${formatDateTime(e.start)}</td>
+                <td class="table-cell">${formatDateTime(e.end)}</td>
+                <td class="table-cell">${e.coord}</td>
+                <td class="table-cell-action">
+                    <button class="btn-delete" onclick="deleteEvent(${i})">Delete</button>
+                </td>
             </tr>
         `;
     });
 
     document.getElementById("eventCount").innerText = events.length;
+}
+
+function formatDateTime(dateTimeString) {
+    const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateTimeString).toLocaleString('en-US', options);
+}
+
+function deleteEvent(index) {
+    if (confirm('Are you sure you want to delete this event?')) {
+        events.splice(index, 1);
+        localStorage.setItem("events", JSON.stringify(events));
+        renderEvents();
+    }
 }
 
 /* CHECK SLOT CONFLICT */
@@ -124,22 +151,30 @@ function isSlotBooked(venue, start, end) {
 }
 
 function addEvent() {
+    // Get form elements properly
+    const nameInput = document.getElementById('name');
+    const clubInput = document.getElementById('club');
+    const venueInput = document.getElementById('venue');
+    const startInput = document.getElementById('start');
+    const endInput = document.getElementById('end');
+    const coordInput = document.getElementById('coord');
+
     let event = {
-        name: name.value.trim(),
-        club: club.value,
-        venue: venue.value,
-        start: start.value,
-        end: end.value,
-        coord: coord.value.trim()
+        name: nameInput.value.trim(),
+        club: clubInput.value,
+        venue: venueInput.value,
+        start: startInput.value,
+        end: endInput.value,
+        coord: coordInput.value.trim()
     };
 
     if (!event.name || !event.club || !event.venue || !event.start || !event.end) {
-        alert("Please fill all required fields");
+        showNotification("Please fill all required fields", "error");
         return;
     }
 
     if (isSlotBooked(event.venue, event.start, event.end)) {
-        alert("❌ Slot already booked for this venue!");
+        showNotification("❌ Slot already booked for this venue!", "error");
         return;
     }
 
@@ -148,9 +183,41 @@ function addEvent() {
 
     renderEvents();
 
-    name.value = coord.value = "";
-    club.value = venue.value = "";
-    start.value = end.value = "";
+    showNotification(`✅ Event "${event.name}" created successfully!`, "success");
+
+    // Clear form
+    nameInput.value = "";
+    coordInput.value = "";
+    clubInput.value = "";
+    venueInput.value = "";
+    startInput.value = "";
+    endInput.value = "";
+}
+
+function showNotification(message, type = "info") {
+    const notification = document.createElement("div");
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background: ${type === "success" ? "#4caf50" : "#f44336"};
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        z-index: 1000;
+        animation: slideInRight 0.4s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = "slideInLeft 0.4s ease reverse";
+        setTimeout(() => notification.remove(), 400);
+    }, 3000);
 }
 
 renderEvents();
