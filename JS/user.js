@@ -219,3 +219,55 @@ document.addEventListener('DOMContentLoaded', () => {
     if(location.hash === '#signup') showModal('signup');
 });
 
+/* Render events created via admin (stored in localStorage) into the user events grid */
+function formatDateTimeForUser(dateTimeString){
+    try{
+        const d = new Date(dateTimeString);
+        return d.toLocaleDateString() + ' • ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }catch(e){ return dateTimeString }
+}
+
+function renderUserEvents(){
+    const grid = document.getElementById('eventsGrid');
+    if(!grid) return;
+    const events = JSON.parse(localStorage.getItem('events')||'[]');
+    grid.innerHTML = '';
+    if(events.length === 0){
+        grid.innerHTML = '<div class="event-empty" style="color:var(--muted);">No upcoming events. Admins can create events from the admin panel.</div>';
+    } else {
+        events.forEach((e, i) => {
+            const startMeta = formatDateTimeForUser(e.start);
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+                <div class="event-header">
+                    <h3>${e.name}</h3>
+                    <span class="chip">${e.club}</span>
+                </div>
+                <p class="event-meta">${e.venue} • ${startMeta}</p>
+                <p class="event-desc">${e.coord ? 'Coordinators: ' + e.coord : ''}</p>
+                <div class="event-actions"><button class="btn-primary" onclick="registerForEvent(${i})">Register</button><button class="btn-outline">Details</button></div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // update main events counter (first .stat-number on the page)
+    const statNums = document.querySelectorAll('.stat-number');
+    if(statNums && statNums.length>0) statNums[0].innerText = String(events.length);
+}
+
+window.registerForEvent = function(index){
+    // increment appliedCount and give user feedback
+    const a = Number(localStorage.getItem('appliedCount')||0);
+    localStorage.setItem('appliedCount', String(a+1));
+    try{ localStorage.setItem('applied-last', Date.now().toString()) }catch(e){}
+    alert('You are registered (demo). Thank you!');
+}
+
+// initial render and updates when localStorage changes
+document.addEventListener('DOMContentLoaded', renderUserEvents);
+window.addEventListener('storage', function(e){
+    if(e.key === 'events' || e.key === 'applied-last' || e.key === 'appliedCount') renderUserEvents();
+});
+
