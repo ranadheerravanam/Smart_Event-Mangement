@@ -6,12 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../CSS/user.css">
     <style>
-        .signup-container{ max-width:520px; margin:60px auto; padding:28px; background:rgba(255,255,255,0.95); color:#07263a; border-radius:12px; box-shadow:0 12px 40px rgba(2,6,23,0.12) }
-        .signup-container h2{ margin:0 0 8px }
-        .field{ margin-bottom:12px }
-        .field input{ width:100%; padding:12px; border-radius:8px; border:1px solid #d1d5db }
-        .actions{ display:flex; gap:10px; margin-top:16px }
-        .muted-link{ margin-top:14px; font-size:14px }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa, #f0f2f5); min-height: 100vh; }
+        .signup-container{ max-width:520px; margin:60px auto; padding:32px; background:rgba(255,255,255,0.98); color:#07263a; border-radius:12px; box-shadow:0 12px 40px rgba(2,6,23,0.12) }
+        .signup-container h2{ margin:0 0 8px; font-size: 1.5rem; font-weight: 700; }
+        .signup-container p{ color: #666; margin: 0 0 24px; }
+        .field{ margin-bottom:16px }
+        .field input{ width:100%; padding:12px; border-radius:8px; border:1px solid #d1d5db; font-size: 0.95rem; transition: all 0.3s ease; }
+        .field input:focus{ outline: none; border-color: #0d47a1; box-shadow: 0 0 10px rgba(13, 71, 161, 0.2); }
+        .field input.error{ border-color: #f44336; }
+        .pwd-strength{ height: 6px; border-radius: 3px; background: #e0e0e0; margin-bottom: 8px; overflow: hidden; }
+        .pwd-strength[data-strength="0"]{ background: #e0e0e0; }
+        .pwd-strength[data-strength="1"]{ background: linear-gradient(90deg, #f44336 33%, #e0e0e0 33%); }
+        .pwd-strength[data-strength="2"]{ background: linear-gradient(90deg, #ff9800 66%, #e0e0e0 66%); }
+        .pwd-strength[data-strength="3"]{ background: linear-gradient(90deg, #ffc107 100%, #e0e0e0 100%); }
+        .pwd-strength[data-strength="4"]{ background: linear-gradient(90deg, #4caf50 100%, #e0e0e0 100%); }
+        .pwd-strength-label{ font-size: 12px; color: #666; font-weight: 600; }
+        .pwd-match-indicator{ font-size: 12px; margin-top: 6px; font-weight: 600; }
+        .pwd-match-indicator.match{ color: #4caf50; }
+        .pwd-match-indicator.mismatch{ color: #f44336; }
+        .actions{ display:flex; gap:10px; margin-top:24px }
+        .btn{ padding: 12px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary{ background: linear-gradient(90deg, #0d47a1, #1565c0); color: white; width: 100%; }
+        .btn-primary:hover:not(:disabled){ transform: translateY(-2px); box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3); }
+        .btn-primary:disabled{ opacity: 0.6; cursor: not-allowed; }
+        .btn-outline{ background: transparent; border: 1px solid #d1d5db; color: #0d47a1; flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+        .btn-outline:hover{ border-color: #0d47a1; background: rgba(13, 71, 161, 0.05); }
+        .auth-msg{ margin-top:16px; padding: 12px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; }
+        .auth-msg.error{ background: #ffebee; color: #c62828; }
+        .auth-msg.success{ background: #e8f5e9; color: #2e7d32; }
+        .form-row-small{ display:flex; align-items:center; gap:8px; font-size:13px; margin: 12px 0; }
+        .form-row-small input[type="checkbox"]{ cursor: pointer; }
+        .form-row-small label{ cursor: pointer; }
+        .muted{ color: #666; }
     </style>
 </head>
 <body>
@@ -26,6 +52,7 @@
     <div id="pwdStrength" class="pwd-strength" data-strength="0"></div>
     <div id="pwdStrengthLabel" class="pwd-strength-label"></div>
     <div class="field"><input id="signupPassword2" type="password" placeholder="Confirm password" required></div>
+    <div id="pwdMatchIndicator" class="pwd-match-indicator"></div>
     <div class="form-row-small"><input type="checkbox" id="showSignUpPwd"><label for="showSignUpPwd">Show password</label></div>
 
     <div class="actions">

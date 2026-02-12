@@ -113,12 +113,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const pwdEl = document.getElementById('signupPassword');
     const pwdBar = document.getElementById('pwdStrength');
     const pwdLabel = document.getElementById('pwdStrengthLabel');
+    const pwd2El = document.getElementById('signupPassword2');
+    const pwdMatchIndicator = document.getElementById('pwdMatchIndicator');
+    
     if(pwdEl){
         pwdEl.addEventListener('input', function(){
             const r = evaluatePasswordStrength(this.value);
             if(pwdBar) pwdBar.setAttribute('data-strength', String(r.score));
             if(pwdLabel) pwdLabel.innerText = r.label;
+            // Check password match when first password changes
+            if(pwd2El && pwd2El.value) {
+                updatePasswordMatchFeedback();
+            }
         });
+    }
+    
+    // Real-time password match feedback
+    function updatePasswordMatchFeedback(){
+        if(!pwd2El || !pwdMatchIndicator) return;
+        const pwd1 = pwdEl ? pwdEl.value : '';
+        const pwd2 = pwd2El.value;
+        if(!pwd2) {
+            pwdMatchIndicator.innerHTML = '';
+            pwd2El.classList.remove('error');
+            return;
+        }
+        if(pwd1 === pwd2){
+            pwdMatchIndicator.innerHTML = '✓ Passwords match';
+            pwdMatchIndicator.className = 'pwd-match-indicator match';
+            pwd2El.classList.remove('error');
+        } else {
+            pwdMatchIndicator.innerHTML = '✗ Passwords do not match';
+            pwdMatchIndicator.className = 'pwd-match-indicator mismatch';
+            pwd2El.classList.add('error');
+        }
+    }
+    
+    if(pwd2El){
+        pwd2El.addEventListener('input', updatePasswordMatchFeedback);
     }
 
     // Simple client-side math CAPTCHA for sign-in
@@ -148,21 +180,72 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
         const pwd = pwdEl ? pwdEl.value : '';
         const pwd2 = pwd2El ? pwd2El.value : '';
+        
         if(!authMsgEl) return;
-        authMsgEl.innerText = '';
-        if(!name || !email || !pwd){ authMsgEl.innerText = 'Please fill all fields'; return }
-        if(pwd !== pwd2){ authMsgEl.innerText = 'Passwords do not match'; return }
+        authMsgEl.innerHTML = '';
+        authMsgEl.className = 'auth-msg';
+        
+        // Validation checks
+        if(!name || !email || !pwd){ 
+            authMsgEl.innerHTML = '⚠️ Please fill in all fields';
+            authMsgEl.className = 'auth-msg error';
+            return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailRegex.test(email)){
+            authMsgEl.innerHTML = '⚠️ Please enter a valid email address';
+            authMsgEl.className = 'auth-msg error';
+            return;
+        }
+        
+        if(pwd !== pwd2){ 
+            authMsgEl.innerHTML = '✗ Passwords do not match';
+            authMsgEl.className = 'auth-msg error';
+            if(pwd2El) pwd2El.classList.add('error');
+            return;
+        }
+        
         const r = evaluatePasswordStrength(pwd);
-        if(r.missing.length > 0){ authMsgEl.innerText = 'Password requirements: ' + r.missing.join(', '); return }
+        if(r.missing.length > 0){ 
+            authMsgEl.innerHTML = '⚠️ Password requirements: ' + r.missing.join(', '); 
+            authMsgEl.className = 'auth-msg error';
+            return;
+        }
+        
         // minimal strength threshold (require at least 3 checks true: length, upper, lower/number/special)
-        if(r.score < 2){ authMsgEl.innerText = 'Password is too weak — choose a stronger password.'; return }
+        if(r.score < 2){ 
+            authMsgEl.innerHTML = '⚠️ Password is too weak — choose a stronger password.'; 
+            authMsgEl.className = 'auth-msg error';
+            return;
+        }
+        
         const users = getUsers();
-        if(users.some(u=>u.email===email)){ authMsgEl.innerText = 'Account already exists. Try signing in.'; return }
+        if(users.some(u=>u.email===email)){ 
+            authMsgEl.innerHTML = '⚠️ Account already exists. Try signing in.'; 
+            authMsgEl.className = 'auth-msg error';
+            return;
+        }
+        
         users.push({ name, email, password: pwd });
         saveUsers(users);
-        authMsgEl.innerText = 'Account created! You can now sign in.';
+        authMsgEl.innerHTML = '✓ Account created! You can now sign in.';
+        authMsgEl.className = 'auth-msg success';
+        
+        // Clear form
+        if(nameEl) nameEl.value = '';
+        if(emailEl) emailEl.value = '';
+        if(pwdEl) pwdEl.value = '';
+        if(pwd2El) pwd2El.value = '';
+        if(pwdMatchIndicator) pwdMatchIndicator.innerHTML = '';
+        if(pwdBar) pwdBar.setAttribute('data-strength', '0');
+        if(pwdLabel) pwdLabel.innerHTML = '';
+        
         // if modal present, switch to sign-in
-        if(typeof switchToSignIn === 'function') switchToSignIn();
+        if(typeof switchToSignIn === 'function') {
+            setTimeout(switchToSignIn, 1200);
+        }
     }
 
     // attach handler and expose it
